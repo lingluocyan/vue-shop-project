@@ -21,6 +21,8 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    // 设置function小括号前面没有空格也不要报错
+    "space-before-function-paren":["error","never"],
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
