@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>后台页面</h2>
+      <h2>欢迎页面</h2>
     </div>
 </template>
 

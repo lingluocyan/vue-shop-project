@@ -5,3 +5,12 @@ html {
   margin: 0;
   padding: 0;
 }
+/* 左侧图标设置右外边距 */
+i.iconfont {
+  margin-right: 10px;
+}
+/* 左侧文字大小设置 */
+.el-submenu__title,
+.el-menu-item {
+  font-size: 14px;
+}

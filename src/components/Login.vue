@@ -19,7 +19,7 @@
 
         <el-row>
           <el-col :offset="15">
-            <el-button @keyup.enter="login" @click="login" type="primary">登录</el-button>
+            <el-button @click="login" type="primary">登录</el-button>
             <el-button @click="resetForm" type="info">重置</el-button>
           </el-col>
         </el-row>
@@ -34,9 +34,10 @@ export default {
     return {
       // 定义需要使用的数据
       // loginForm 收集登录表单的全部表单域信息
+      // 方便开发,默认写上用户们密码
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 定义表单域的验证
       loginFormRules: {
@@ -71,7 +72,13 @@ export default {
           const { data: res } = await this.$http.post('login', this.loginForm)
           // 如果请求失败则弹出信息框
           if (res.meta.status !== 200) {
-            return this.$message.error('用户名或密码错误!')
+            // 错误则重置表单并弹出错误信息
+            this.resetForm()
+            return this.$message({
+              message: '用户名或密码错误!',
+              type: 'error',
+              duration: 1000
+            })
           }
           // 请求成功则本地存储token,这是一个标识，代表登录成功
           window.sessionStorage.setItem('token', res.data.token)
