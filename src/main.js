@@ -19,6 +19,7 @@ Vue.prototype.$http = axios
 // 设置axios拦截器,在发送请求前携带必要的信息
 axios.interceptors.request.use(function(config) {
   // 给axios通过拦截器设置Authorization的token信息，以便可以正常向服务器发起请求获得相关数据
+  // 配置的信息以请求头的方式存在
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })

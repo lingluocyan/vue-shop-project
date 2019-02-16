@@ -14,3 +14,20 @@ i.iconfont {
 .el-menu-item {
   font-size: 14px;
 }
+/* 卡片样式 */
+.box-card {
+  margin-top: 15px;
+  box-shadow:0 1px 1px rgba(0,0,0,0.15);
+  z-index: 99;
+}
+/* 数据列表样式 */
+.el-table {
+  margin-top: 15px;
+  font-size: 12px;
+}
+/* 分页列表样式 */
+/* 分页组件样式 */
+.el-pagination {
+  margin-top: 20px;
+  font-size: 12px;
+}

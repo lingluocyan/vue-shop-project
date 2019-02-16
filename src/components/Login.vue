@@ -7,7 +7,7 @@
       <!-- element-ui表单控件 -->
       <el-form ref="loginFormRef" :rules="loginFormRules" :model="loginForm">
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username">
+          <el-input autofocus @keyup.enter.native="login" v-model="loginForm.username">
             <i slot="prefix" class="iconfont icon-user"></i>
           </el-input>
         </el-form-item>
