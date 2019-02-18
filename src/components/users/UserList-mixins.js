@@ -1,8 +1,35 @@
 export default {
   data() {
+    let checkMobile = (rule, value, callback) => {
+      if (!value.trim()) {
+        return callback(new Error('手机号码不能为空'))
+      }
+      if (!/^1[34578]\d{9}$/.test(value)) {
+        return callback(new Error('手机号码有误,请重新填写!'))
+      } else {
+        callback()
+      }
+    }
     return {
       // 用户列表信息
       userList: [],
+      // 添加弹层信息
+      addForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
+      },
+      // 编辑弹层信息
+      editForm: {
+        username: '',
+        email: '',
+        mobile: ''
+      },
+      // 是否显示添加弹层
+      addDialogVisible: false,
+      // 是否显示编辑弹层
+      editDialogVisible: false,
       // 分页参数信息
       queryInfo: {
         // 查询信息
@@ -13,6 +40,35 @@ export default {
         pagesize: 3,
         // 总条数
         total: 0
+      },
+      // 新增用户表单验证
+      addFormRules: {
+        // 提交数据用户名和密码不能为空
+        username: [
+          {
+            required: true,
+            message: '请输入用户名称',
+            trigger: 'blur'
+          }
+        ],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        // validator对应一个验证函数
+        mobile: [{ required: true, validator: checkMobile, trigger: 'blur' }]
+      },
+      // 编辑用户表单验证
+      editFormRules: {
+        // 提交数据用户名和密码不能为空
+        username: [
+          {
+            required: true,
+            message: '请输入用户名称',
+            trigger: 'blur'
+          }
+        ],
+        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        // validator对应一个验证函数
+        mobile: [{ required: true, validator: checkMobile, trigger: 'blur' }]
       }
     }
   },
@@ -70,6 +126,128 @@ export default {
       })
       // 刷新页面
       this.getUserList()
+    },
+    // 添加功能相关
+    // 添加用户
+    addUser() {
+      this.$refs.addFormRef.validate(async valid => {
+        // 表单验证
+        if (!valid) {
+          return null
+        }
+        // 验证成功
+        const { data: res } = await this.$http.post(`users`, this.addForm)
+        if (res.meta.status !== 201) {
+          return this.$message({
+            duration: 1000,
+            type: 'error',
+            message: res.meta.msg
+          })
+        }
+        // 添加成功,关闭表单,提示成功,刷新页面
+        this.addDialogVisible = false
+        this.$message({
+          duration: 1000,
+          type: 'success',
+          message: res.meta.msg
+        })
+        this.getUserList()
+      })
+    },
+    // 弹层关闭前的回调
+    addDialogbeforeClose(done) {
+      this.$refs.addFormRef.resetFields()
+      done()
+    },
+    // 点击取消也就是关闭的回调
+    addDialogClose() {
+      // 对话框关闭
+      this.addDialogVisible = false
+      // 清空对话框
+      this.$refs.addFormRef.resetFields()
+    },
+    // 删除用户相关
+    async delUser(id) {
+      // 确认是否删除防止误触
+      const cfm = await this.$confirm('此操作将永久用户, 是否继续?', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      // 确认删除
+      if (cfm === 'confirm') {
+        const { data: res } = await this.$http.delete(`users/${id}`)
+        if (res.meta.status !== 200) {
+          return this.$message({
+            duration: 1000,
+            type: 'error',
+            message: res.meta.msg
+          })
+        }
+        // 删除成功
+        this.$message({
+          duration: 1000,
+          type: 'success',
+          message: res.meta.msg
+        })
+        this.getUserList()
+      }
+    },
+    // 编辑用户相关
+    // 编辑用户
+    editUser() {
+      // 先进行表单验证
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) {
+          return null
+        }
+        // 这里的id是showEditDialog拿回来的editForm里的id
+        const { data: res } = await this.$http.put(
+          `users/${this.editForm.id}`,
+          this.editForm
+        )
+        if (res.meta.status !== 200) {
+          return this.$message({
+            message: res.meta.msg,
+            duration: 1000,
+            type: 'error'
+          })
+        }
+        // 成功则关闭编辑弹层刷新页面
+        this.editDialogVisible = false
+        this.$message({
+          message: res.meta.msg,
+          duration: 1000,
+          type: 'success'
+        })
+        this.getUserList()
+      })
+    },
+    // 展示编辑弹层并填充数据的回调
+    async showEditDialog(id) {
+      const { data: res } = await this.$http.get(`users/${id}`)
+      if (res.meta.status !== 200) {
+        return this.$message({
+          duration: 1000,
+          message: res.meta.msg,
+          type: 'error'
+        })
+      }
+      // 成功则渲染数据,打开编辑弹层
+      this.editForm = res.data
+      this.editDialogVisible = true
+    },
+    // 弹层关闭前的回调
+    editDialogbeforeClose(done) {
+      this.$refs.editFormRef.resetFields()
+      done()
+    },
+    // 点击取消也就是关闭的回调
+    editDialogClose() {
+      // 对话框关闭
+      this.editDialogVisible = false
+      // 清空对话框
+      this.$refs.editFormRef.resetFields()
     }
   }
 }

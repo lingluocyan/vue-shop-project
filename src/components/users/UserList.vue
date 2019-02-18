@@ -3,9 +3,8 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片部分 -->
     <el-card class="box-card">
@@ -26,7 +25,7 @@
           </el-input>
         </el-col>
         <el-col :span="10">
-          <el-button type="primary">添加用户</el-button>
+          <el-button @click="addDialogVisible=true" type="primary">添加用户</el-button>
         </el-col>
       </el-row>
       <!-- 用户列表展示区域 -->
@@ -47,21 +46,35 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
-          <el-row>
-            <el-button type="primary" icon="el-icon-edit" size="mini" circle></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" circle></el-button>
-            <!-- 文字提示部分 -->
-            <!-- :enterable代表鼠标是否能进入提示框 -->
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="权限设置"
-              :enterable="false"
-              placement="top"
-            >
-              <el-button type="warning" icon="el-icon-setting" size="mini" circle></el-button>
-            </el-tooltip>
-          </el-row>
+          <template slot-scope="scope">
+            <el-row>
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                @click="showEditDialog(scope.row.id)"
+                size="mini"
+                circle
+              ></el-button>
+              <el-button
+                @click="delUser(scope.row.id)"
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                circle
+              ></el-button>
+              <!-- 文字提示部分 -->
+              <!-- :enterable代表鼠标是否能进入提示框 -->
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="权限设置"
+                :enterable="false"
+                placement="top"
+              >
+                <el-button type="warning" icon="el-icon-setting" size="mini" circle></el-button>
+              </el-tooltip>
+            </el-row>
+          </template>
         </el-table-column>
       </el-table>
       <!-- 分页功能 -->
@@ -76,6 +89,78 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="queryInfo.total"
       ></el-pagination>
+      <!-- 添加用户弹层 -->
+      <!-- :before-close是关闭对话框前的回调 -->
+      <el-dialog
+        title="添加用户"
+        :visible.sync="addDialogVisible"
+        width="60%"
+        :before-close="addDialogbeforeClose"
+        @close="addDialogClose"
+      >
+        <!-- 添加用户表单 -->
+        <el-form
+          :model="addForm"
+          status-icon
+          :rules="addFormRules"
+          ref="addFormRef"
+          label-width="80px"
+          class="demo-ruleForm"
+        >
+          <!-- label是表头,prop是对应的数据 -->
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="addForm.username" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="addForm.password" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="addForm.email" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号码" prop="mobile">
+            <el-input v-model="addForm.mobile" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addDialogClose">取 消</el-button>
+          <el-button type="primary" @click="addUser">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 修改用户弹层 -->
+      <!-- :before-close是关闭对话框前的回调 -->
+      <el-dialog
+        title="编辑用户"
+        :visible.sync="editDialogVisible"
+        width="60%"
+        :before-close="editDialogbeforeClose"
+        @close="editDialogClose"
+      >
+        <!-- 添加用户表单 -->
+        <el-form
+          :model="editForm"
+          status-icon
+          :rules="editFormRules"
+          ref="editFormRef"
+          label-width="80px"
+          class="demo-ruleForm"
+        >
+          <!-- label是表头,prop是对应的数据 -->
+          <el-form-item label="用户名" prop="username">
+            <el-input :disabled="true" v-model="editForm.username" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editForm.email" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号码" prop="mobile">
+            <el-input v-model="editForm.mobile" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="editDialogClose">取 消</el-button>
+          <el-button type="primary" @click="editUser">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>

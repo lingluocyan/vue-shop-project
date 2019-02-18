@@ -10,7 +10,7 @@ import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 // 使用完整ElementUI
 Vue.use(ElementUI)
-
+// 阻止启动生产消息
 Vue.config.productionTip = false
 // 配置axios的baseURL也就是请求后会自动拼接上这一段地址
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
