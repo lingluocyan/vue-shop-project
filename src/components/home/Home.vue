@@ -40,7 +40,7 @@
               <i :class="'iconfont'+' '+iconList[index]"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item v-for="item2 in item.children" :key="item2.id" :index="'/'+item.path">
+            <el-menu-item v-for="item2 in item.children" :key="item2.id" :index="'/'+item2.path">
               <i class="el-icon-menu"></i>
               <span>{{item2.authName}}</span>
             </el-menu-item>
