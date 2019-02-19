@@ -13,6 +13,8 @@ export default {
     return {
       // 用户列表信息
       userList: [],
+      // 用于分配的角色列表信息
+      roleList: [],
       // 添加弹层信息
       addForm: {
         username: '',
@@ -26,10 +28,17 @@ export default {
         email: '',
         mobile: ''
       },
+      // 权限分配弹层信息
+      setForm: {
+        username: '',
+        rid: ''
+      },
       // 是否显示添加弹层
       addDialogVisible: false,
       // 是否显示编辑弹层
       editDialogVisible: false,
+      // 是否显示角色分配弹层
+      setDialogVisible: false,
       // 分页参数信息
       queryInfo: {
         // 查询信息
@@ -69,6 +78,16 @@ export default {
         email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         // validator对应一个验证函数
         mobile: [{ required: true, validator: checkMobile, trigger: 'blur' }]
+      },
+      // 权限分配校验规则
+      setFormRules: {
+        username: [
+          {
+            required: true,
+            message: '请选择角色!',
+            trigger: 'blur'
+          }
+        ]
       }
     }
   },
@@ -190,6 +209,11 @@ export default {
           type: 'success',
           message: res.meta.msg
         })
+        // 判断当前页码的数据是否只有一条
+        if (this.userList.length === 1 && this.queryInfo.pagenum > 1) {
+          // 当前页码减一
+          this.queryInfo.pagenum--
+        }
         this.getUserList()
       }
     },
@@ -248,6 +272,72 @@ export default {
       this.editDialogVisible = false
       // 清空对话框
       this.$refs.editFormRef.resetFields()
+    },
+    // 权限分配相关
+    setDialogbeforeClose(done) {
+      this.$refs.setFormRef.resetFields()
+      // 关闭弹层
+      done()
+    },
+    setDialogClose() {
+      // 对话框关闭
+      this.setDialogVisible = false
+      // 清空对话框
+      this.$refs.setFormRef.resetFields()
+    },
+    // 展示角色分配弹层时触发的回调
+    async showSetDialog(id) {
+      this.setDialogVisible = true
+      const { data: res } = await this.$http.get(`users/${id}`)
+      if (res.meta.status !== 200) {
+        return this.$message({
+          type: 'error',
+          message: res.meta.msg,
+          duration: 1000
+        })
+      }
+      // 成功
+      //   "data": {
+      //     "id": 503,
+      //     "username": "admin3",
+      //     "role_id": 0,
+      //     "mobile": "00000",
+      //     "email": "new@new.com"
+      //  },
+      this.setForm = res.data
+      // 获取用于分配的角色信息也就是下拉框显示的信息
+      const { data: res2 } = await this.$http.get(`roles`)
+      if (res2.meta.status !== 200) {
+        return this.$message({
+          type: 'error',
+          message: res.meta.msg,
+          duration: 1000
+        })
+      }
+      // 填充用于分配角色的列表,这是全部角色列表包括了下拉框需要的所有数据
+      this.roleList = res2.data
+    },
+    // 分配权限
+    async setUser() {
+      const { data: res } = await this.$http.put(
+        `users/${this.setForm.id}/role`,
+        this.setForm
+      )
+      if (res.meta.status !== 200) {
+        return this.$message({
+          type: 'error',
+          message: res.meta.msg,
+          duration: 1000
+        })
+      }
+      // 成功,关闭对话框刷新数据
+      this.setDialogVisible = false
+      this.$message({
+        type: 'success',
+        message: res.meta.msg,
+        duration: 1000
+      })
+      this.getUserList()
     }
   }
 }
