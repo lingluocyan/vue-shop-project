@@ -153,7 +153,7 @@
           class="demo-ruleForm"
         >
           <!-- label是表头,prop是对应的数据 -->
-          <!-- 用户名无法修改,所以直接禁用了 -->
+          <!-- 用户名无法修改,所以直接禁用 -->
           <el-form-item label="用户名" prop="username">
             <el-input :disabled="true" v-model="editForm.username" autocomplete="off"></el-input>
           </el-form-item>
