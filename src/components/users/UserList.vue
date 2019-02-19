@@ -71,7 +71,14 @@
                 :enterable="false"
                 placement="top"
               >
-                <el-button type="warning" icon="el-icon-setting" size="mini" circle></el-button>
+                <!-- 权限分配按钮 -->
+                <el-button
+                  type="warning"
+                  icon="el-icon-setting"
+                  size="mini"
+                  @click="showSetDialog(scope.row.id)"
+                  circle
+                ></el-button>
               </el-tooltip>
             </el-row>
           </template>
@@ -136,7 +143,7 @@
         :before-close="editDialogbeforeClose"
         @close="editDialogClose"
       >
-        <!-- 添加用户表单 -->
+        <!-- 修改用户表单 -->
         <el-form
           :model="editForm"
           status-icon
@@ -146,6 +153,7 @@
           class="demo-ruleForm"
         >
           <!-- label是表头,prop是对应的数据 -->
+          <!-- 用户名无法修改,所以直接禁用 -->
           <el-form-item label="用户名" prop="username">
             <el-input :disabled="true" v-model="editForm.username" autocomplete="off"></el-input>
           </el-form-item>
@@ -159,6 +167,46 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogClose">取 消</el-button>
           <el-button type="primary" @click="editUser">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 权限设置弹层 -->
+      <!-- :before-close是关闭对话框前的回调 -->
+      <el-dialog
+        title="分配角色"
+        :visible.sync="setDialogVisible"
+        width="60%"
+        :before-close="setDialogbeforeClose"
+        @close="setDialogClose"
+      >
+        <!-- 添加用户表单 -->
+        <el-form
+          :model="setForm"
+          status-icon
+          :rules="setFormRules"
+          ref="setFormRef"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <!-- label是表头,prop是对应的数据 -->
+          <el-form-item label="当前的用户" prop="username">{{setForm.username}}</el-form-item>
+          <el-form-item label="分配角色" prop="rid">
+            <!-- Select选择器 -->
+            <el-select v-model="setForm.rid" placeholder="请选择">
+              <!-- label分组的组名 -->
+              <!-- value选项的值 -->
+              <el-option
+                v-for="item in roleList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setDialogClose">取 消</el-button>
+          <el-button type="primary" @click="setUser">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
