@@ -3,6 +3,26 @@ export default {
     return {
       // 角色列表数据
       roleList: [],
+      // 权限信息
+      rightsInfo: [],
+      // 默认选中的树节点
+      deFaultCheckedKeys: [],
+      // 树状图的数据属性
+      rightsInfoProps: {
+        // 树节点的名称
+        label: 'authName',
+        // 树节点真正起作用的值value
+        // value: 'id',
+        // children上下级关系衔接
+        children: 'children'
+      },
+      // 表单数据对象
+      distributeForm: {
+        // 被分配权限的角色id
+        id: 0,
+        // 被分配权限的角色名称
+        roleName: ''
+      },
       // 添加角色表单数据对象
       addForm: {
         roleName: '',
@@ -17,6 +37,8 @@ export default {
       addDialogVisible: false,
       // 编辑对话框是否显示
       editDialogVisible: false,
+      // 分配权限对话框是否显示
+      distributeDialog: false,
       // 添加角色验证规则
       addFormRules: {
         roleName: [
@@ -185,6 +207,7 @@ export default {
       this.$refs.editFormRef.resetFields()
     },
     // table表格展开行相关
+    // 删除权限
     async delRight(role, rightId) {
       const cfm = await this.$confirm(
         '此操作将永久删除该角色, 是否继续?',
@@ -217,6 +240,74 @@ export default {
         this.getRolesList()
         this.roleList.children = res.data
       }
+    },
+    // 给角色分配权限
+    async distributeRights() {
+      // 获取权限和半选的叶子节点的id信息
+      const k1 = this.$refs.rightsTree.getCheckedKeys()
+      const k2 = this.$refs.rightsTree.getHalfCheckedKeys()
+      const allIds = [...k1, ...k2].join(',')
+      if (!allIds) {
+        this.$message({
+          type: 'error',
+          duration: 1000,
+          message: '请选取权限'
+        })
+      }
+      const { data: res } = await this.$http.post(
+        `roles/${this.distributeForm.id}/rights`,
+        { rids: allIds }
+      )
+      if (res.meta.status !== 200) {
+        return this.$message({
+          type: 'error',
+          duration: 1000,
+          message: res.meta.msg
+        })
+      }
+      // 成功
+      this.$message({
+        type: 'success',
+        duration: 1000,
+        message: res.meta.msg
+      })
+      this.getRolesList()
+      this.distributeDialog = false
+    },
+    // 展示分配权限对话框(参数role是当前被分配权限的角色记录(包括id,roleName,roleDesc))
+    async showDistributeDialog(role) {
+      this.distributeDialog = true
+      // 填充表单对象
+      this.distributeForm = role
+      // 获取用户分配的权限数据
+      const { data: res } = await this.$http.get(`rights/tree`)
+      if (res.meta.status !== 200) {
+        return this.$message({
+          type: 'error',
+          duration: 1000,
+          message: res.meta.msg
+        })
+      }
+      // 填充rightsInfo
+      this.rightsInfo = res.data
+      // 通过递归遍历把拥有的三级权限id获取出来
+      let idArr = [] // 临时接收拥有的权限id
+      // idArr就是当前角色拥有的权限集合的数组
+      // 递归获取选中的id
+      this.getHaveRights(role, idArr)
+      // 设置默认选中的节点
+      this.deFaultCheckedKeys = idArr
+    },
+    // 从一个角色中把拥有的全部权限的id汇总起来,给到keys也就是idArr
+    getHaveRights(node, keys) {
+      // node.children不为空
+      if (!node.children) {
+        return keys.push(node.id)
+      }
+      // 获取到的都是第三级别的id信息
+      node.children.forEach(item => {
+        return this.getHaveRights(item, keys)
+      })
     }
   }
 }

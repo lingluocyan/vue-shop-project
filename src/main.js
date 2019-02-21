@@ -3,6 +3,8 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import axios from 'axios'
+// 给当前项目引入tree型的树状表格
+import ZKTable from 'vue-table-with-tree-grid'
 // import 'element-ui/lib/theme-chalk/index.css'
 // 引入全局控制css样式
 import './assets/css/global.css'
@@ -10,6 +12,9 @@ import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 // 使用完整ElementUI
 Vue.use(ElementUI)
+// 使用树状表格
+Vue.use(ZKTable)
+Vue.component('zk-table', ZKTable)
 // 阻止启动生产消息
 Vue.config.productionTip = false
 // 配置axios的baseURL也就是请求后会自动拼接上这一段地址

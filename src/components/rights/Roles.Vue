@@ -75,7 +75,12 @@
               size="mini"
               icon="el-icon-delete"
             >删除</el-button>
-            <el-button type="warning" size="mini" icon="el-icon-setting">分配权限</el-button>
+            <el-button
+              @click="showDistributeDialog(scope.row)"
+              type="warning"
+              size="mini"
+              icon="el-icon-setting"
+            >分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -139,6 +144,41 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogClose">取 消</el-button>
           <el-button type="primary" @click="editRole">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- 分配权限用户弹层 -->
+      <!-- :before-close是关闭对话框前的回调 -->
+      <!-- :before-close="distributeDialogbeforeClose" -->
+      <el-dialog title="权限分配" :visible.sync="distributeDialog" width="50%">
+        <!-- 添加用户表单 -->
+        <!-- :rules="distributeFormRules" -->
+        <el-form
+          :model="distributeForm"
+          status-icon
+          ref="distributeFormRef"
+          label-width="120px"
+          class="demo-ruleForm"
+        >
+          <!-- label是表头,prop是对应的数据 -->
+          <el-form-item label="角色名称" prop="roleName">{{distributeForm.roleName}}</el-form-item>
+          <el-form-item label="供分配权限">
+            <!-- show-checkbox展示复选框 -->
+            <!-- default-expand-all默认全部树节点展开 -->
+            <!-- deFaultCheckedKeys设定树节点默认选中情况 -->
+            <el-tree
+              :data="rightsInfo"
+              show-checkbox
+              default-expand-all
+              ref="rightsTree"
+              node-key="id"
+              :default-checked-keys="deFaultCheckedKeys"
+              :props="rightsInfoProps"
+            ></el-tree>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="distributeDialog = false">取 消</el-button>
+          <el-button type="primary" @click="distributeRights">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
