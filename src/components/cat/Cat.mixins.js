@@ -11,7 +11,7 @@ export default {
       editForm: {
         cate_name: ''
       },
-      // 共选取的分类数据
+      // 共选取的分类数据(第1,2级别)
       cateTwoList: [],
       // 被选中分类的接受对象
       selectedCateTwo: [],
@@ -91,6 +91,7 @@ export default {
     // 添加分类相关
     // 获取添加弹层所需数据
     async showAddDialog() {
+      // 因为是往分类里加,所以type为2,具体商品无法再加children了
       const { data: res } = await this.$http.get(`categories`, {
         params: { type: 2 }
       })
@@ -102,7 +103,6 @@ export default {
         })
       }
       // 成功
-      console.log(res.data)
       this.cateTwoList = res.data
       this.addDialogVisible = true
     },
@@ -148,7 +148,7 @@ export default {
       this.addForm.cat_pid = 0
       this.addForm.cat_level = 0
     },
-    // 鼠标切换分类项目事件触发
+    // 级联选择器内容变化触发的回调
     cateTwoChange() {
       // 选取父级,需要记录给addForm.cat_pid表单域
       if (this.selectedCateTwo.length === 0) {
@@ -157,8 +157,12 @@ export default {
         // 分类等级为0
         this.addForm.cat_level = 0
       } else {
+        // 获取数据的时候做了限制，只拿到两级数据,因此len取不到3
+        // 获取选取分类信息数组,如果是一级别[100],二级别[100,200]
         let len = this.selectedCateTwo.length
+        // 选取1级别len-1后数组第0项就是选取的项的上级id
         this.addForm.cat_pid = this.selectedCateTwo[len - 1]
+        // 选取1级别len就是数组的长度就是第几级别的权限
         this.addForm.cat_level = len
       }
     },

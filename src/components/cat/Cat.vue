@@ -12,9 +12,13 @@
       <el-button @click="showAddDialog()" type="primary">添加分类</el-button>
       <!-- tree型table表格展示区 -->
       <!-- :columns给表格设置数据属性 -->
+      <!-- 去除复选框selection-type -->
+      <!-- 去除展开行expand-type -->
+      <!-- 添加序号列show-index -->
+      <!-- tree的外边距 margin-top -->
       <zk-table
-        :selection-type="false"
         :expand-type="false"
+        :selection-type="false"
         :columns="catInfosColumns"
         :data="catInfos"
         show-index
@@ -31,7 +35,12 @@
             size="mini"
             icon="el-icon-edit"
           >编辑</el-button>
-          <el-button @click="delCate(scope.row.cat_id)" type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+          <el-button
+            @click="delCate(scope.row.cat_id)"
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+          >删除</el-button>
         </template>
       </zk-table>
       <!-- 分页功能 -->
@@ -46,7 +55,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
-      <!-- 添加用户弹层 -->
+      <!-- 添加分类弹层 -->
       <!-- :before-close是关闭对话框前的回调 -->
       <el-dialog
         title="添加分类"
@@ -64,12 +73,13 @@
           label-width="80px"
           class="demo-ruleForm"
         >
-          <el-form-item label="活动名称" prop="cat_name">
+          <el-form-item label="分类名称" prop="cat_name">
             <el-input v-model="addForm.cat_name"></el-input>
           </el-form-item>
           <!-- label是表头,prop是对应的数据 -->
           <el-form-item label="分级上类">
             <!-- :options="cateTwoList"可选项数据源 -->
+            <!-- v-model设定或接收当前选中的数据 -->
             <!-- change-on-select是否允许选择任意一级的选项 -->
             <!-- :prop是配置选项 -->
             <!-- 级联选择器 -->

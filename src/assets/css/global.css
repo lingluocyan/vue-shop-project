@@ -17,7 +17,7 @@ i.iconfont {
 /* 卡片样式 */
 .box-card {
   margin-top: 15px;
-  box-shadow:0 1px 1px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   z-index: 99;
 }
 /* 数据列表样式 */
@@ -30,4 +30,12 @@ i.iconfont {
 .el-pagination {
   margin-top: 20px;
   font-size: 12px;
+}
+/* 给添加商品的步骤条设置文字大小 */
+.el-steps {
+  font-size: 12px;
+}
+/* 给富文本编辑器设置编辑区域 */
+.ql-editor {
+  height: 200px;
 }
