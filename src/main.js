@@ -10,6 +10,8 @@ import ZKTable from 'vue-table-with-tree-grid'
 import './assets/css/global.css'
 // 引入需要的字体文件
 import './assets/fonts/iconfont.css'
+// 导入vue-moment更改时间格式
+Vue.use(require('vue-moment'))
 // 使用完整ElementUI
 Vue.use(ElementUI)
 // 使用树状表格
