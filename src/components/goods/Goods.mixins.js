@@ -53,7 +53,7 @@ export default {
       this.queryInfo.pagenum = value
       this.getGoodsList()
     },
-    // 根据关键字检索
+    // 清空输入框时显示第一页的内容
     search() {
       this.queryInfo.pagenum = 1
       this.getGoodsList()

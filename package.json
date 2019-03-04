@@ -12,8 +12,9 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "echarts": "^4.1.0",
     "element-ui": "^2.5.4",
-    "lodash": "^4.17.11",
+    "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-moment": "^4.0.0",
     "vue-quill-editor": "^3.0.6",

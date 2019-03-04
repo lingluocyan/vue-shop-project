@@ -60,7 +60,7 @@ export default {
       },
       // 图片上传相关
       // 图片上传服务器api地址
-      uploadUrl: 'http://127.0.0.1:8888/api/private/v1/upload',
+      uploadUrl: 'http://127.0.0.1:8765/api/private/v1/upload',
       // 图片上传,请求头Token信息设定
       uploadParams: {
         Authorization: window.sessionStorage.getItem('token')

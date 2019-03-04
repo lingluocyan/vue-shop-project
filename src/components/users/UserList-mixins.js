@@ -127,7 +127,7 @@ export default {
       // 重新请求数据
       this.getUserList()
     },
-    // 用户状态发生改变触发的回调
+    // 用户状态发生改变触发的回调,需要传入用户ID和用户状态
     async changeState(uid, type) {
       const { data: res } = await this.$http.put(`users/${uid}/state/${type}`)
       if (res.meta.status !== 200) {

@@ -11,6 +11,7 @@
       <el-alert type="info" center show-icon :closable="false" title="消息提示的文案"></el-alert>
       <!-- 步骤进度条 -->
       <!-- active当前激活步骤,-0隐式转换为数字 -->
+      <!-- align-center居中对齐 -->
       <el-steps :active="activeName-0" finish-status="success" align-center>
         <el-step title="基本信息"></el-step>
         <el-step title="商品参数"></el-step>

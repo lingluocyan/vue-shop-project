@@ -127,7 +127,7 @@ export default {
     },
     // 切换标签被点击后的回调处理
     handleClick() {
-      // 如果没选取了第三级别分类(catThreeId的值为0)
+      // 如果没选取第三级别分类(catThreeId的值为0)
       if (this.catThreeId === 0) {
         return null
       }

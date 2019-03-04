@@ -116,7 +116,8 @@ export default {
 .el-container {
   height: 100%;
   .el-header {
-    background-color: #373d41;
+    background-color: #454949;
+    // background-color: #373d41;
     height: 60px;
     display: flex;
     justify-content: space-between;

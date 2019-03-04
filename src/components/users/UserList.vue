@@ -30,7 +30,7 @@
       </el-row>
       <!-- 用户列表展示区域 -->
       <el-table :data="userList" border stripe style="width: 100%">
-        <el-table-column type="index" label="用户名" width="50"></el-table-column>
+        <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column prop="username" label="用户名" width="180"></el-table-column>
         <el-table-column prop="mobile" label="手机号码" width="180"></el-table-column>
         <el-table-column prop="role_name" label="角色名称" width="180"></el-table-column>
@@ -193,8 +193,8 @@
           <el-form-item label="分配角色" prop="rid">
             <!-- Select选择器 -->
             <el-select v-model="setForm.rid" placeholder="请选择">
-              <!-- label分组的组名 -->
-              <!-- value选项的值 -->
+              <!-- label分组的组名，标签名称类似表头 -->
+              <!-- value选项的值，真正操作的值 -->
               <el-option
                 v-for="item in roleList"
                 :key="item.id"
